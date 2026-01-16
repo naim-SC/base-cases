@@ -301,13 +301,21 @@ echo "✅ Done! Run: npm start"
 📊 Development Status
 
 <div align="center">
-
-Repository Stats
-
-https://github-readme-stats.vercel.app/api?username=naim-SC&show_icons=true&theme=chartreuse-dark&hide_border=true
-https://github-readme-streak-stats.herokuapp.com/?user=naim-SC&theme=chartreuse-dark&hide_border=true
-https://github-readme-stats.vercel.app/api/top-langs/?username=naim-SC&theme=chartreuse-dark&layout=compact&hide_border=true
-
+  <table>
+    <tr>
+      <td align="center">
+        <img src="https://github-readme-stats.vercel.app/api?username=naim-SC&show_icons=true&theme=chartreuse-dark&hide_border=true" alt="GitHub Stats">
+      </td>
+      <td align="center">
+        <img src="https://github-readme-streak-stats.herokuapp.com/?user=naim-SC&theme=chartreuse-dark&hide_border=true" alt="Streak Stats">
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center">
+        <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=naim-SC&theme=chartreuse-dark&layout=compact&hide_border=true" alt="Top Languages">
+      </td>
+    </tr>
+  </table>
 </div>
 
 🤝 Contributing
