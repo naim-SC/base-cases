@@ -7,10 +7,10 @@
 
 <div align="center">
 
-https://img.shields.io/badge/Author-Nimzz-green?style=for-the-badge&logo=github
-https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white
-https://img.shields.io/badge/Baileys-25D366?style=for-the-badge&logo=whatsapp&logoColor=white
-https://img.shields.io/badge/Termux-000000?style=for-the-badge&logo=android&logoColor=white
+![Author](https://img.shields.io/badge/Author-Nimzz-green?style=for-the-badge&logo=github)
+![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![Baileys](https://img.shields.io/badge/Baileys-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)
+![Termux](https://img.shields.io/badge/Termux-000000?style=for-the-badge&logo=android&logoColor=white)
 
 </div>
 
@@ -24,7 +24,7 @@ https://img.shields.io/badge/Termux-000000?style=for-the-badge&logo=android&logo
   <img src="https://count.getloli.com/@naim-SC?name=elaina-base&theme=booru&padding=7&offset=0&align=center&scale=2&pixelated=1&darkmode=0">
 </div>
 
-📢 Connect With Me
+## 📢 Connect With Me
 
 <div align="center">
   <a href="https://whatsapp.com/channel/0029VbBhZWdGJP8HlbGaE63Q">
@@ -41,32 +41,29 @@ https://img.shields.io/badge/Termux-000000?style=for-the-badge&logo=android&logo
   </a>
 </div>
 
-✨ Features
+## ✨ Features
 
-✅ Core Features
+### ✅ Core Features
+- **Termux Compatible** - Works perfectly on Android Termux
+- **Clean Codebase** - No bloat, easy to modify
+- **Dual Connection Mode** - QR Code & Pairing Code support
+- **Sticker Creator** - Image/Video to WebP with EXIF
+- **Multi Database** - JSON & MongoDB support
+- **Owner System** - Easy owner management
+- **Premium Features** - User premium management
+- **Anti-Delete** - Detect deleted messages
+- **Auto Backup** - Backup script feature
 
-· Termux Compatible - Works perfectly on Android Termux
-· Clean Codebase - No bloat, easy to modify
-· Dual Connection Mode - QR Code & Pairing Code support
-· Sticker Creator - Image/Video to WebP with EXIF
-· Multi Database - JSON & MongoDB support
-· Owner System - Easy owner management
-· Premium Features - User premium management
-· Anti-Delete - Detect deleted messages
-· Auto Backup - Backup script feature
+### 🎯 New Features (Modified Version)
+- **Case Management** - Add/del case via command
+- **Fun Commands** - Games & entertainment
+- **Tools Utility** - Converter & calculators
+- **Enhanced Menu** - Better UI & organization
+- **Local Data Storage** - No API required
 
-🎯 New Features (Modified Version)
+## 🚀 Quick Installation
 
-· Case Management - Add/del case via command
-· Fun Commands - Games & entertainment
-· Tools Utility - Converter & calculators
-· Enhanced Menu - Better UI & organization
-· Local Data Storage - No API required
-
-🚀 Quick Installation
-
-For Termux Users
-
+### For Termux Users
 ```bash
 # Update packages
 pkg update && pkg upgrade -y
@@ -75,7 +72,7 @@ pkg update && pkg upgrade -y
 pkg install nodejs git ffmpeg -y
 
 # Clone repository
-git clone git@github.com:naim-SC/elaina-base.git
+git clone https://github.com/naim-SC/elaina-base.git
 cd base-cases
 
 # Install packages
@@ -98,7 +95,7 @@ apt update && apt upgrade -y
 apt install nodejs git ffmpeg -y
 
 # Clone and setup
-git clone git@github.com:naim-SC/elaina-base.git
+git clone https://github.com/naim-SC/elaina-base.git
 cd base-cases
 npm install --legacy-peer-deps
 npm start
@@ -110,7 +107,7 @@ Edit settings.js file:
 
 ```javascript
 // Basic Configuration
-global.owner = ["62xxxxxxx"]          // Your WhatsApp number
+global.owner = ["6282137487477"]          // Your WhatsApp number
 global.namaOwner = "Nimzz"                // Your name
 global.namaBot = "Elaina"                 // Bot name
 
@@ -334,7 +331,8 @@ Note: This is a modified version based on the original Elaina Base. Please give 
 Jika project ini membantu Anda, jangan lupa kasih ⭐ ya!
 Saran saya pake panel aja ya 🗿
 
-bot structure inspiration by denzy
+Bot structure inspiration by denzy
+
 ---
 
 <div align="center">
