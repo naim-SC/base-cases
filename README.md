@@ -16,7 +16,7 @@ https://img.shields.io/badge/Termux-000000?style=for-the-badge&logo=android&logo
 
 <div align="center">
   <a href="https://github.com/naim-SC">
-    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=30&duration=4000&color=FF6B8B&center=true&vCenter=true&width=600&lines=Hello,+I+am+Nimzz;Welcome+to+Elaina+Base+🤖" alt="Typing SVG">
+    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=30&duration=4000&color=FF6B8B&center=true&vCenter=true&width=600&lines=Hello,+I+am+Nimzz;Welcome+to+Elaina+Base+☕" alt="Typing SVG">
   </a>
 </div>
 
@@ -27,13 +27,13 @@ https://img.shields.io/badge/Termux-000000?style=for-the-badge&logo=android&logo
 📢 Connect With Me
 
 <div align="center">
-  <a href="https://whatsapp.com/channel/0029VbAwI4cJ3jv4IuzKob04">
+  <a href="https://whatsapp.com/channel/0029VbBhZWdGJP8HlbGaE63Q">
     <img src="https://img.shields.io/badge/Channel-25D366?style=for-the-badge&logo=whatsapp&logoColor=white">
   </a>
-  <a href="https://wa.me/6282364532184">
+  <a href="https://wa.me/6282137487477">
     <img src="https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white">
   </a>
-  <a href="https://t.me/pantatbegetar">
+  <a href="https://t.me/Nimzz4">
     <img src="https://img.shields.io/badge/Telegram-0088cc?style=for-the-badge&logo=telegram&logoColor=white">
   </a>
   <a href="https://github.com/naim-SC">
@@ -75,8 +75,8 @@ pkg update && pkg upgrade -y
 pkg install nodejs git ffmpeg -y
 
 # Clone repository
-git clone https://github.com/naim-SC/elaina-base.git
-cd elaina-base
+git clone git@github.com:naim-SC/elaina-base.git
+cd base-cases
 
 # Install packages
 npm install --legacy-peer-deps
@@ -98,8 +98,8 @@ apt update && apt upgrade -y
 apt install nodejs git ffmpeg -y
 
 # Clone and setup
-git clone https://github.com/naim-SC/elaina-base.git
-cd elaina-base
+git clone git@github.com:naim-SC/elaina-base.git
+cd base-cases
 npm install --legacy-peer-deps
 npm start
 ```
@@ -110,7 +110,7 @@ Edit settings.js file:
 
 ```javascript
 // Basic Configuration
-global.owner = ["6282364532184"]          // Your WhatsApp number
+global.owner = ["62xxxxxxx"]          // Your WhatsApp number
 global.namaOwner = "Nimzz"                // Your name
 global.namaBot = "Elaina"                 // Bot name
 
@@ -119,7 +119,7 @@ global.pairing_code = false               // false = QR Code, true = Pairing Cod
 global.pairingKode = 'ELAINA67'           // Pairing code (if enabled)
 
 // Social Links
-global.linkSaluran = "https://whatsapp.com/channel/0029VbAwI4cJ3jv4IuzKob04"
+global.saluran = "https://whatsapp.com/channel/0029VbBhZWdGJP8HlbGaE63Q"
 ```
 
 📁 Project Structure
@@ -334,6 +334,7 @@ Note: This is a modified version based on the original Elaina Base. Please give 
 Jika project ini membantu Anda, jangan lupa kasih ⭐ ya!
 Saran saya pake panel aja ya 🗿
 
+bot structure inspiration by denzy
 ---
 
 <div align="center">

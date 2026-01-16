@@ -248,7 +248,7 @@ await sock.sendMessage(m.chat, {
       title: global.namaBot || "WhatsApp Bot",
       body: "whatsapp bot 2025",
       thumbnailUrl: "https://files.catbox.moe/4dt7iv.jpg",   
-      sourceUrl: global.linkSaluran,   
+      sourceUrl: global.saluran,   
       mediaType: 1,  
       renderLargerThumbnail: false
     }
@@ -297,7 +297,7 @@ await sock.sendMessage(m.chat, {
       title: global.namaBot || "WhatsApp Bot",
       body: "whatsapp bot 2025",
       thumbnailUrl: "https://files.catbox.moe/4dt7iv.jpg",   
-      sourceUrl: global.linkSaluran,   
+      sourceUrl: global.saluran,   
       mediaType: 1,  
       renderLargerThumbnail: true
     }
@@ -343,7 +343,7 @@ await sock.sendMessage(m.chat, {
       title: "🎮 Fun & Games",
       body: "Hibur diri dengan berbagai game seru!",
       thumbnailUrl: "https://files.catbox.moe/abc123.jpg",   
-      sourceUrl: global.linkSaluran,   
+      sourceUrl: global.saluran,   
       mediaType: 1,  
       renderLargerThumbnail: true
     }
@@ -386,7 +386,7 @@ await sock.sendMessage(m.chat, {
       title: "🔧 Tools & Utility",
       body: "Berbagai alat bantu praktis",
       thumbnailUrl: "https://files.catbox.moe/xyz789.jpg",   
-      sourceUrl: global.linkSaluran,   
+      sourceUrl: global.saluran,   
       mediaType: 1,  
       renderLargerThumbnail: true
     }
@@ -414,7 +414,7 @@ case "quote": {
         title: "💭 Kata Bijak Hari Ini",
         body: "Inspirasi untuk harimu",
         thumbnailUrl: "https://files.catbox.moe/quotes.jpg",
-        sourceUrl: global.linkSaluran,
+        sourceUrl: global.saluran,
         mediaType: 1
       }
     }
@@ -449,7 +449,7 @@ case "fakta": {
         title: "🤯 Fakta Menarik",
         body: "Tahukah kamu?",
         thumbnailUrl: "https://files.catbox.moe/facts.jpg",
-        sourceUrl: global.linkSaluran,
+        sourceUrl: global.saluran,
         mediaType: 1
       }
     }
@@ -527,7 +527,7 @@ case "bijak": {
         title: "📜 Wisdom Quotes",
         body: "Renungan harian",
         thumbnailUrl: "https://files.catbox.moe/wisdom.jpg",
-        sourceUrl: global.linkSaluran,
+        sourceUrl: global.saluran,
         mediaType: 1
       }
     }
@@ -1170,7 +1170,7 @@ case "getcase": {
 if (!isCreator) return m.reply(global.mess.owner || "Khusus owner!")
 if (!text) return m.reply("Format: .getcase nama_case")
 const getcase = (cases) => {
-return "case "+`\"${cases}\"`+fs.readFileSync('./case.js').toString().split('case \"'+cases+'\"')[1].split("break")[0]+"break"
+return "case "+`\"${cases}\"`+fs.readFileSync('./elaina.js').toString().split('case \"'+cases+'\"')[1].split("break")[0]+"break"
 }
 try {
 m.reply(`${getcase(q)}`)
@@ -1185,7 +1185,7 @@ break
 case 'addcase': {
     if (!isCreator) return m.reply(global.mess.owner || "Khusus owner!");
     if (!text) return m.reply(`Contoh: .addcase nama_case`);
-    const namaFile = path.join(__dirname, 'case.js');
+    const namaFile = path.join(__dirname, 'elaina.js');
     const caseBaru = `${text}\n\n`;
     const tambahCase = (data, caseBaru) => {
         const posisiDefault = data.lastIndexOf("default:");
@@ -1209,7 +1209,7 @@ case 'addcase': {
                     return m.reply(`❌ Terjadi kesalahan saat menulis file: ${err.message}`);
                 } else {
                     console.log('✅ Sukses menambahkan case baru:', caseBaru);
-                    return m.reply('✅ Sukses menambahkan case!\n\nSilakan edit kode case di file case.js');
+                    return m.reply('✅ Sukses menambahkan case!\n\nSilakan edit kode case di file elaina.js');
                 }
             });
         } else {
@@ -1245,7 +1245,7 @@ case 'addcaser': {
         return m.reply("❌ Kode yang direply kosong!");
     }
     
-    const namaFile = path.join(__dirname, 'case.js');
+    const namaFile = path.join(__dirname, 'elaina.js');
     
     try {
         let data = await fs.promises.readFile(namaFile, 'utf8');
@@ -1262,7 +1262,7 @@ case 'addcaser': {
         // Temukan posisi default case
         const defaultIndex = data.lastIndexOf("default:");
         if (defaultIndex === -1) {
-            return m.reply("❌ Tidak dapat menemukan 'default:' dalam file case.js");
+            return m.reply("❌ Tidak dapat menemukan 'default:' dalam file elaina.js");
         }
         
         // Sisipkan case baru sebelum default
@@ -1315,7 +1315,7 @@ case 'delcase': {
             m.reply(`❌ Terjadi kesalahan saat memproses file: ${err.message}`);
         }
     }
-    removeCase('./case.js', text.trim());
+    removeCase('./elaina.js', text.trim());
 }
 break
         
@@ -1490,7 +1490,7 @@ case "backup": {
         const backupItems = [
             { path: 'index.js', type: 'file' },
             { path: 'settings.js', type: 'file' },
-            { path: 'case.js', type: 'file' },
+            { path: 'elaina.js', type: 'file' },
             { path: 'package.json', type: 'file' },
             { path: 'README.md', type: 'file' },
             { path: 'lib', type: 'folder' },
@@ -1808,6 +1808,64 @@ case "8ball": case "ball": {
   const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
   
   m.reply(`*🎱 MAGIC 8-BALL*\n\nPertanyaan: ${text}\n\nJawaban: *${randomAnswer}*`);
+}
+break;
+
+case "waifu": case "wifu": {
+    try {
+        // Cooldown 2 detik
+        const cooldown = 2000;
+        if (!global.waifuCooldown) global.waifuCooldown = {};
+        if (global.waifuCooldown[m.sender] && Date.now() - global.waifuCooldown[m.sender] < cooldown) {
+            return;
+        }
+        global.waifuCooldown[m.sender] = Date.now();
+        
+        // React loading
+        await sock.sendMessage(m.chat, {
+            react: {
+                text: "⏳",
+                key: m.key
+            }
+        });
+        
+        // API waifu
+        const { data } = await axios.get('https://api.waifu.pics/sfw/waifu');
+        
+        if (!data || !data.url) return;
+        
+        // Get image buffer
+        const imageBuffer = await getBuffer(data.url);
+        
+        // Kirim gambar tanpa caption
+        const message = {
+            image: imageBuffer,
+            footer: global.namaBot || 'WhatsApp Bot',
+            headerType: 1,
+            buttons: [
+                { buttonId: `${prefix}wifu`, buttonText: { displayText: 'Next ⏭️' }, type: 1 }
+            ]
+        };
+        
+        const sentMsg = await sock.sendMessage(m.chat, message, { quoted: m });
+        
+        // Simpan data untuk button handler-
+        if (!global.waifuData) global.waifuData = {};
+        global.waifuData[sentMsg.key.id] = {
+            userId: m.sender,
+            imageUrl: data.url
+        };
+        
+        // Auto delete data setelah 3 menit
+        setTimeout(() => {
+            if (global.waifuData[sentMsg.key.id]) {
+                delete global.waifuData[sentMsg.key.id];
+            }
+        }, 3 * 60 * 1000);
+        
+    } catch (error) {
+        console.error('Error waifu command:', error);
+    }
 }
 break;
 

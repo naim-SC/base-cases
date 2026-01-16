@@ -1,7 +1,7 @@
 {
-  "name": "base-whatsappbot",
+  "name": "elaina-base",
   "version": "1.0.0",
-  "description": "WhatsApp Bot using Baileys",
+  "description": "WhatsApp Bot using Baileys, elaina cantik pengen aku nikahin jir 😘",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

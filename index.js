@@ -1,15 +1,12 @@
-require('./setting');
+require('./settings');
 const fs = require('fs');
 const pino = require('pino');
 const path = require('path');
-const axios = require('axios');
 const chalk = require('chalk');
 const readline = require('readline');
-const FileType = require('file-type');
 const { exec } = require('child_process');
 const { Boom } = require('@hapi/boom');
 const NodeCache = require('node-cache');
-const fetch = require('node-fetch');
 
 const {
     default: makeWASocket,
@@ -20,7 +17,7 @@ const {
     DisconnectReason,
     makeInMemoryStore,
     makeCacheableSignalKeyStore,
-    fetchLatestBaileysVersion,  // ✅ TAMBAH INI
+    fetchLatestBaileysVersion,
     proto,
     PHONENUMBER_MCC,
     getAggregateVotesInPollMessage,
@@ -61,7 +58,7 @@ const database = new DataBase();
             try {
                 await database.write(global.db);
             } catch (e) {
-                console.error(chalk.red('❌ Error Simpan DB:'), e.message);
+                console.error(chalk.hex('#FF0000')('❌ Error Simpan DB:'), chalk.hex('#FFFFFF')(e.message));
             } finally {
                 isSaving = false;
                 if (pendingSave) {
@@ -73,7 +70,7 @@ const database = new DataBase();
 
         setInterval(saveDatabase, 30000);
     } catch (e) {
-        console.error(chalk.red('❌ Gagal inisialisasi database:'), e.message);
+        console.error(chalk.hex('#FF0000')('❌ Gagal inisialisasi database:'), chalk.hex('#FFFFFF')(e.message));
         process.exit(1);
     }
 })();
@@ -89,10 +86,11 @@ const RECONNECT_BASE_DELAY = 5000;
 async function startingBot() {
     console.clear();
     
-    console.log(chalk.cyan('┌────────────────────────────────────────┐'));
-    console.log(chalk.cyan('│        WHATSAPP BOT - ELAINA           │'));
-    console.log(chalk.cyan('└────────────────────────────────────────┘'));
-    console.log(chalk.yellow('🚀 Starting WhatsApp Bot...\n'));
+    // Tampilkan header dengan warna RGB
+    console.log(chalk.hex('#FF0000')('┌────────────────────────────────────────┐'));
+    console.log(chalk.hex('#FF7F00')('│') + chalk.hex('#FFFF00')('        WHATSAPP BOT - ELAINA           ') + chalk.hex('#00FF00')('│'));
+    console.log(chalk.hex('#0000FF')('└────────────────────────────────────────┘'));
+    console.log(chalk.hex('#FFD700')('🚀 Starting WhatsApp Bot...\n'));
 
     const store = await makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'store' }) })
     const { state, saveCreds } = await useMultiFileAuthState('session');
@@ -124,58 +122,70 @@ async function startingBot() {
             groupCache.set(id, meta);
             return meta;
         } catch (err) {
-            console.error(chalk.red(`❌ Error ambil metadata grup ${id}:`), err.message);
+            console.error(chalk.hex('#FF0000')(`❌ Error ambil metadata grup ${id}:`), chalk.hex('#FFFFFF')(err.message));
             return { id, subject: 'Unknown', participants: [] };
         }
     };
     
     if (pairingCode && !sock.authState.creds.registered) {
-        console.log(chalk.yellow('┌────────────────────────────────────────┐'));
-        console.log(chalk.yellow('│           PAIRING MODE                 │'));
-        console.log(chalk.yellow('└────────────────────────────────────────┘\n'));
+        console.log(chalk.hex('#FFD700')('┌────────────────────────────────────────┐'));
+        console.log(chalk.hex('#FFD700')('│           PAIRING MODE                 │'));
+        console.log(chalk.hex('#FFD700')('└────────────────────────────────────────┘\n'));
         
         const ascii = `
-⣿⣿⠇⠁⢨⢰⣶⠨⣀⢹⣿⣿⡷⣿⠹⢿⣿⣿⣿⣿⣷⣽⢿⣿⡇⣿⣿⣿⣾⣿
-⣿⡟⢠⣿⢸⠽⣟⣃⠙⡌⣿⣿⡇⡏⣻⣿⣿⣿⣿⣿⣿⣿⣦⠛⣿⡹⣿⣿⣿⣿
-⣿⠇⣿⣭⢸⣿⣿⣿⡆⡐⡸⣿⣧⢃⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣌⢷⡹⣿⣿⣿
-⡿⣹⣿⣿⡟⣿⣿⣿⣿⣌⠔⣽⣿⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡱⢹⣿⣿
-⢣⢸⣿⣿⣿⣿⣿⣿⣿⣿⣦⣘⣿⡏⣿⣿⣿⡯⠽⠿⠛⠛⠛⠛⠛⠛⠛⢲⣻⣿
-⡬⡋⣿⣿⣿⢿⠿⠿⣻⣿⣿⣷⡮⠻⢹⣿⣿⣇⣀⣀⣀⠤⢄⡀⠀⣠⢠⣿⡟⢿
-⢀⣇⠻⠑⠈⠀⠀⠀⢹⣿⣿⣿⣿⣦⡀⢿⣿⣿⣿⢿⣿⣀⣈⣁⣉⣡⣥⠿⣗⠜
-⠈⢱⡰⡀⣞⠓⠢⣐⣸⣯⣿⣿⣿⣿⣿⣮⣿⣿⣿⣿⣿⣿⣯⣧⣷⣿⣿⣶⣿⣧
-⠠⢸⡅⣿⣵⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣽
-⠀⢸⠇⣿⣿⣿⣿⣿⣿⣿⠿⢿⣻⣛⣛⣻⣭⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟
-⠀⣼⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⡟
-⠸⣿⢀⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢃
-⣎⢿⢸⢰⡈⡛⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⡟⠋⠘⣰
-⣿⣯⠸⢸⠉⡿⣿⣷⠨⣩⢛⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⡿⣟⣻⣽⣿⡌⣿⠃⣿
-⣿⣿⣧⡎⢰⣿⠏⣿⢸⣟⠸⣿⢿⣶⠨⠭⢉⣽⣿⢹⣾⣿⣿⣿⡿⣻⣥⣾⢩⠟
+⣿⣿⣿⣿⣿⣿⡿⠛⠉⣁⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠋⠻⣿⣿⣿⣧⣔⡉⠛⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⡿⠛⠡⣀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇⠀⠙⠿⣿⠉⠻⣿⡟⠁⢀⡄⠘⢿⠉⠻⠟⠁⢱⣮⡀⠪⢙⢿⣿⣿⣿⣿⣿⣿
+⣿⡿⠋⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠩⠆⠀⠀⠀⠀⠀⠀⣼⣿⣿⣷⣄⠂⡙⢿⣿⣿⣿⣿
+⣿⠃⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⣀⡈⠀⠀⠂⠁⠀⠀⠀⣀⣠⣴⡻⢿⣿⣿⣿⣿⣷⡄⠂⡙⢿⣿⣿
+⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣾⣿⣿⣿⣿⣿⣿⣿⡘⢿⣿⣿⣿⣿⣿⣦⡐⠠⢻⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⢈⣿⣻⣿⣿⣿⣿⣷⣌⠠⢿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡏⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠘⣿⣝⣿⣿⣿⣿⣟⣆⠢
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠐⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇⠈⢿⢸⣿⣿⣿⣿⣿⣷
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠋⡀⣿⣿⣿⣿⣿⣿⣿⡏⣿⢻⢿⣿⣿⣿⣿⣿⡄⠘⣽⢻⣿⣿⣿⣿⣾
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⡟⢠⢰⠟⠁⢹⣿⣿⣿⣿⡇⣿⣾⡏⠉⠻⢿⣿⣿⣅⠂⢸⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⣟⣿⣿⣿⣿⡿⣿⠟⠀⠃⢀⣠⣶⣿⣯⣿⣿⣿⡇⣿⣿⣹⣷⣤⣀⡉⡉⡃⢸⠀⢾⢻⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⣿⣿⣿⣿⣟⣟⠟⣠⣿⢠⣿⣿⣿⣿⣿⣿⣿⣯⠇⣿⣿⣿⣿⣿⣿⡿⣿⢡⢞⡀⢽⣼⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⡿⠏⠿⠉⠹⠎⣰⣿⡇⠾⠉⡿⣿⣿⠿⢿⡿⡿⠀⡿⢿⡿⣿⢿⣿⣿⡏⣇⢿⡀⢾⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⡿⣿⣿⣿⣿⣿⢾⡃⣴⣆⠀⠀⠀⠈⠙⠻⣷⣶⣶⣶⣶⣶⣺⣶⣶⣶⣷⣶⣶⣶⣶⣶⣶⡢⠒⠀⠈⠁⢀⠀⣎⡉⠉⡙
+⣿⣿⣿⣿⣿⣿⠥⣿⣿⣿⣿⣿⣻⡅⢿⣿⣦⡀⠀⠀⠀⠀⠈⠛⢿⢋⣵⢟⣾⡿⠟⣿⣿⣻⢟⢿⡿⠟⠁⠀⠀⠀⢀⣴⡏⠀⣾⡻⣟⣷
+⣿⣿⣿⣿⡯⠃⠀⣿⣿⣿⣿⠿⡜⣃⢸⣧⢿⠿⠦⠄⠀⠀⠀⠀⠀⠙⢯⠝⣉⣴⡿⣏⣥⢻⠫⠋⠀⠀⠀⠀⠀⢴⡿⢻⠇⠀⣧⢿⡽⣾
+⣿⣿⡿⡏⣠⣾⠀⣿⣿⣿⣿⡌⢳⢽⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣞⡝⣦⣳⢟⡮⢋⣰⡀⠀⠀⠀⠀⠀⠀⠈⠘⠂⠰⡹⢯⡞⣽
+⣿⣿⠶⡁⣿⣿⠀⣿⣿⣿⣿⣜⡀⢣⡄⠀⠀⠀⠀⠀⠀⣀⣀⢀⣤⡾⣛⣴⢺⡱⣏⢏⡔⣭⢮⠛⣢⣤⣀⠀⠀⠀⠀⠀⠀⠀⣓⣯⡝⣾
+⣿⣟⡆⡇⢿⣿⠀⣿⣿⣿⣿⣒⡷⠈⠻⡘⢂⣴⢾⣟⠿⢊⣴⡿⠏⣴⣿⡾⢏⣰⣾⣿⡿⢎⣡⡾⣵⠋⣌⢿⣔⡦⢄⣀⣠⠀⢰⣯⡝⣶
+⣿⣯⣟⣷⠈⠷⢀⣿⣿⣿⣿⣒⠀⡄⢠⡈⠘⠱⠷⠩⣜⣻⣯⣥⣾⣿⣿⣥⣾⣿⣿⣿⣷⣦⡻⢉⣴⣾⡻⡟⣠⢕⠯⠻⠡⠄⠐⣯⡞⣼
+⣿⣿⢾⡝⢠⠀⢸⣿⣿⣿⣿⣏⠀⢹⡘⣿⡈⣷⡄⠹⣽⣿⣿⠿⠹⠿⢍⣍⡙⠉⠉⠛⠛⠛⠻⢿⣿⣽⡿⠋⣉⢃⣤⡆⢦⠀⠀⢿⡜⣿
+⣿⣿⢯⠃⠆⠀⢸⣿⣿⣿⣿⠃⠀⣾⣿⣿⣷⢸⣿⡆⢹⣿⣇⠐⠿⣿⣿⣿⣿⣿⣿⣿⡿⠍⠀⣸⣿⡟⢠⣾⡏⣼⣟⣰⠏⠀⠀⡹⢞⡿
+⣿⣿⢋⠜⠀⡀⣼⣿⣿⣿⣿⢳⣄⠈⢻⣿⣿⣿⣿⣷⡀⠹⣿⣷⣶⣴⣬⣭⣿⣯⣤⣥⣴⣶⣾⡿⠋⣰⣿⣿⣷⣿⣿⣿⠀⠀⠁⢘⢻⢹
+⣿⠏⠌⠀⡀⢠⢽⣿⣿⣿⣟⡎⡇⠀⠀⠻⣿⣿⣿⣿⣷⠀⠻⠿⢿⣿⣿⣿⣿⣿⣿⣿⠿⠟⢉⠀⣼⣿⣿⣿⣿⣿⠟⠁⠀⡀⠂⢧⠃⣿
+⡿⠃⠀⠂⠀⣾⣸⣿⣿⣿⣞⣷⠃⠀⠀⢀⠙⠿⠿⠿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠛⠀⠘⢿⣿⡿⠟⠁⠀⠠⠐⠀⡰⠁⢐⣿
+
+base simple 
         `.split('\n');
         
         ascii.forEach(line => {
-            console.log(chalk.magenta(line));
+            console.log(chalk.hex('#FF00FF')(line));
         });
         
-        console.log(chalk.cyan('\nMasukkan nomor WhatsApp:'));
+        console.log(chalk.hex('#00FFFF')('\nMasukkan nomor WhatsApp Untuk Dijadikan Bot Contoh 62xxxxxxx:'));
         
-        let phoneNumber = await question(chalk.green('> '));
+        let phoneNumber = await question(chalk.hex('#00FF00')('> '));
         phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
         
         if (!phoneNumber) {
-            console.log(chalk.red('❌ Nomor tidak valid!'));
+            console.log(chalk.hex('#FF0000')('❌ Nomor tidak valid!'));
             process.exit(1);
         }
         
         try {
             const code = await sock.requestPairingCode(phoneNumber, global.pairingKode);
-            console.log(chalk.green('┌────────────────────────────────────────┐'));
-            console.log(chalk.green('│           PAIRING CODE                 │'));
-            console.log(chalk.green('├────────────────────────────────────────┤'));
-            console.log(chalk.white.bold(`│          ${code}          │`));
-            console.log(chalk.green('└────────────────────────────────────────┘'));
-            console.log(chalk.cyan('\n📱 Masukkan code di WhatsApp > Linked Devices'));
+            console.log(chalk.hex('#00FF00')('┌────────────────────────────────────────┐'));
+            console.log(chalk.hex('#00FF00')('│           PAIRING CODE                 │'));
+            console.log(chalk.hex('#00FF00')('├────────────────────────────────────────┤'));
+            console.log(chalk.hex('#FFFFFF').bold(`│          ${code}          │`));
+            console.log(chalk.hex('#00FF00')('└────────────────────────────────────────┘'));
+            console.log(chalk.hex('#00FFFF')('\n📱 Masukkan code di WhatsApp > Linked Devices'));
         } catch (e) {
-            console.log(chalk.red('❌ Gagal membuat pairing code:'), e.message);
+            console.log(chalk.hex('#FF0000')('❌ Gagal membuat pairing code:'), chalk.hex('#FFFFFF')(e.message));
             process.exit(1);
         }
     }
@@ -185,22 +195,22 @@ async function startingBot() {
         const { connection, lastDisconnect, qr, receivedPendingNotifications } = update;
         
         if (qr) {
-            console.log(chalk.yellow('┌────────────────────────────────────────┐'));
-            console.log(chalk.yellow('│           SCAN QR CODE                 │'));
-            console.log(chalk.yellow('│    WhatsApp > Linked Devices > Scan    │'));
-            console.log(chalk.yellow('└────────────────────────────────────────┘'));
+            console.log(chalk.hex('#FFD700')('┌────────────────────────────────────────┐'));
+            console.log(chalk.hex('#FFD700')('│           SCAN QR CODE                 │'));
+            console.log(chalk.hex('#FFD700')('│    WhatsApp > Linked Devices > Scan    │'));
+            console.log(chalk.hex('#FFD700')('└────────────────────────────────────────┘'));
         }
 
         if (connection === 'close') {
             const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
             
-            console.log(chalk.red('┌────────────────────────────────────────┐'));
-            console.log(chalk.red('│          CONNECTION CLOSED             │'));
-            console.log(chalk.red(`│         Reason: ${reason || 'Unknown'}               │`));
-            console.log(chalk.red('└────────────────────────────────────────┘'));
+            console.log(chalk.hex('#FF0000')('┌────────────────────────────────────────┐'));
+            console.log(chalk.hex('#FF0000')('│          CONNECTION CLOSED             │'));
+            console.log(chalk.hex('#FF0000')(`│         Reason: ${reason || 'Unknown'}               │`));
+            console.log(chalk.hex('#FF0000')('└────────────────────────────────────────┘'));
 
             if (reason === DisconnectReason.loggedOut) {
-                console.log(chalk.red('❌ Device logged out, delete session folder'));
+                console.log(chalk.hex('#FF0000')('❌ Device logged out, delete session folder'));
                 process.exit(0);
             }
 
@@ -211,8 +221,8 @@ async function startingBot() {
                 const jitter = Math.random() * 2000;
                 const delayTime = baseDelay + jitter;
 
-                console.log(chalk.yellow(`🔄 Reconnect attempt ${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS}`));
-                console.log(chalk.yellow(`⏳ Waiting ${Math.round(delayTime/1000)} seconds...\n`));
+                console.log(chalk.hex('#FFD700')(`🔄 Reconnect attempt ${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS}`));
+                console.log(chalk.hex('#FFD700')(`⏳ Waiting ${Math.round(delayTime/1000)} seconds...\n`));
                 
                 setTimeout(async () => {
                     try {
@@ -230,16 +240,17 @@ async function startingBot() {
             reconnectAttempts = 0;
             
             console.clear();
-            console.log(chalk.green('┌────────────────────────────────────────┐'));
-            console.log(chalk.green('│          CONNECTED SUCCESSFULLY!       │'));
-            console.log(chalk.green('└────────────────────────────────────────┘'));
-            console.log(chalk.cyan(`👤 Bot Name: ${global.namaBot || 'WhatsApp Bot'}`));
-            console.log(chalk.cyan(`👤 User: ${sock.user?.name || 'Unknown'}`));
-            console.log(chalk.cyan(`🔢 JID: ${sock.user?.id || 'Unknown'}`));
-            console.log(chalk.cyan(`🕐 Time: ${new Date().toLocaleString('id-ID')}`));
-            console.log(chalk.green('────────────────────────────────────────'));
-            console.log(chalk.yellow('🚀 Ready to receive messages!\n'));
+            console.log(chalk.hex('#00FF00')('┌────────────────────────────────────────┐'));
+            console.log(chalk.hex('#00FF00')('│          CONNECTED SUCCESSFULLY!       │'));
+            console.log(chalk.hex('#00FF00')('└────────────────────────────────────────┘'));
+            console.log(chalk.hex('#00FFFF')(`👤 Bot Name: ${global.namaBot || 'WhatsApp Bot'}`));
+            console.log(chalk.hex('#00FFFF')(`👤 User: ${sock.user?.name || 'Unknown'}`));
+            console.log(chalk.hex('#00FFFF')(`🔢 JID: ${sock.user?.id || 'Unknown'}`));
+            console.log(chalk.hex('#00FFFF')(`🕐 Time: ${new Date().toLocaleString('id-ID')}`));
+            console.log(chalk.hex('#00FF00')('────────────────────────────────────────'));
+            console.log(chalk.hex('#FFD700')('🚀 Ready to receive messages!\n'));
             
+            /*
             try {
                 if (global.owner && global.owner.length > 0) {
                     for (let owner of global.owner) {
@@ -250,10 +261,11 @@ async function startingBot() {
                 }
             } catch (e) {
             }
+            */
         }
         
         if (receivedPendingNotifications) {
-            console.log(chalk.cyan('🔄 Syncing pending messages...'));
+            console.log(chalk.hex('#00FFFF')('🔄 Syncing pending messages...'));
         }
     });
 
@@ -264,7 +276,7 @@ async function startingBot() {
         try {
             await MessagesUpsert(sock, message, store);
         } catch (err) {
-            console.log('❌ Error in messages.upsert:', err);
+            console.log(chalk.hex('#FF0000')('❌ Error in messages.upsert:'), chalk.hex('#FFFFFF')(err));
         }
     });
 
@@ -294,7 +306,7 @@ async function startingBot() {
                         messageId: Banned.key.id
                     });
                 } catch (err) {
-                    console.error(chalk.red('❌ Error di anti-delete:'), err);
+                    console.error(chalk.hex('#FF0000')('❌ Error di anti-delete:'), chalk.hex('#FFFFFF')(err));
                 }
             }
         }
@@ -320,7 +332,7 @@ async function startingBot() {
                 messageTimestamps.set(jid, Date.now());
                 resolve(result);
             } catch (err) {
-                console.error(`❌ Error sendMessage ke ${jid}:`, err.message);
+                console.error(chalk.hex('#FF0000')(`❌ Error sendMessage ke ${jid}:`), chalk.hex('#FFFFFF')(err.message));
                 resolve();
             }
         }));
@@ -331,20 +343,20 @@ async function startingBot() {
 }
 
 startingBot().catch(err => {
-    console.error(chalk.red('┌────────────────────────────────────────┐'));
-    console.error(chalk.red('│      FAILED TO START BOT               │'));
-    console.error(chalk.red(`│      Error: ${err.message}              │`));
-    console.error(chalk.red('└────────────────────────────────────────┘'));
+    console.error(chalk.hex('#FF0000')('┌────────────────────────────────────────┐'));
+    console.error(chalk.hex('#FF0000')('│      FAILED TO START BOT               │'));
+    console.error(chalk.hex('#FF0000')(`│      Error: ${err.message}              │`));
+    console.error(chalk.hex('#FF0000')('└────────────────────────────────────────┘'));
     setTimeout(startingBot, 10000);
 });
 
 let file = require.resolve(__filename)
 fs.watchFile(file, () => {
     fs.unwatchFile(file)
-    console.log(chalk.yellow('┌────────────────────────────────────────┐'));
-    console.log(chalk.yellow(`│          UPDATE DETECTED                │`));
-    console.log(chalk.yellow(`│        File: ${path.basename(__filename)}        │`));
-    console.log(chalk.yellow('└────────────────────────────────────────┘'));
+    console.log(chalk.hex('#FFD700')('┌────────────────────────────────────────┐'));
+    console.log(chalk.hex('#FFD700')(`│          UPDATE DETECTED                │`));
+    console.log(chalk.hex('#FFD700')(`│        File: ${path.basename(__filename)}        │`));
+    console.log(chalk.hex('#FFD700')('└────────────────────────────────────────┘'));
     delete require.cache[file]
     require(file)
 });

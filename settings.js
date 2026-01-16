@@ -10,7 +10,7 @@ global.tempatDB = 'database.json' // jangan di ubah
 global.pairing_code = true 
 global.pairingKode = 'ELAINA67'
 
-global.telegram = "t.me/pantatbegetar"
+global.telegram = "t.me/Nimzz4"
 global.namaChannel = "Elaina Base"
 global.linkSaluran = "https://whatsapp.com/channel/0029VbAwI4cJ3jv4IuzKob04"
 
@@ -18,9 +18,9 @@ global.packname = 'Elaina Bot Sticker';
 global.author = 'Elaina Base';
 
 // SETTINGS PAYMENT
-global.dana = "082137487477";
-global.ovo = "082137487477";
-global.gopay = "082137487477";
+global.dana = "-";
+global.ovo = "-";
+global.gopay = "-";
 global.qris = "Gak ada jur";
 
 global.mess = {
