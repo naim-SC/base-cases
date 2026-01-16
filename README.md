@@ -298,21 +298,21 @@ npm install --legacy-peer-deps --no-bin-links
 echo "✅ Done! Run: npm start"
 ```
 
-📊 Development Status
+## 📊 Development Status
 
 <div align="center">
   <table>
     <tr>
       <td align="center">
-        <img src="https://github-readme-stats.vercel.app/api?username=naim-SC&show_icons=true&theme=chartreuse-dark&hide_border=true" alt="GitHub Stats">
+        <img src="https://github-readme-stats.vercel.app/api?username=naim-SC&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=FF6B8B&icon_color=00D4AA&text_color=FFFFFF" alt="GitHub Stats">
       </td>
       <td align="center">
-        <img src="https://github-readme-streak-stats.herokuapp.com/?user=naim-SC&theme=chartreuse-dark&hide_border=true" alt="Streak Stats">
+        <img src="https://github-readme-streak-stats.herokuapp.com/?user=naim-SC&theme=tokyonight&hide_border=true&background=0D1117&ring=FF6B8B&fire=FF6B8B&currStreakLabel=FFFFFF" alt="Streak Stats">
       </td>
     </tr>
     <tr>
       <td colspan="2" align="center">
-        <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=naim-SC&theme=chartreuse-dark&layout=compact&hide_border=true" alt="Top Languages">
+        <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=naim-SC&theme=tokyonight&layout=compact&hide_border=true&bg_color=0D1117&title_color=FF6B8B&text_color=FFFFFF&langs_count=8" alt="Top Languages">
       </td>
     </tr>
   </table>
